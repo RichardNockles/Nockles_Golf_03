@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Nockles_Golf_02"
+config/name="Nockles_Golf_03"
 run/main_scene="res://02_Levels/Main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 

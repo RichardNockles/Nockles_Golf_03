@@ -5,10 +5,15 @@
 [ext_resource type="Script" path="res://02_Levels/Camera/camera_controller.gd" id="3_2ian3"]
 
 [sub_resource type="Environment" id="Environment_ny8su"]
+background_mode = 1
+background_color = Color(0.403318, 0.721208, 0.863612, 1)
+background_energy_multiplier = 1.17
+ambient_light_color = Color(0.787759, 0.787759, 0.787759, 1)
+ambient_light_energy = 2.39
 
 [node name="Main" type="Node3D"]
 
-[node name="GolfCourse" parent="." instance=ExtResource("1_pmp6p")]
+[node name="Course" parent="." instance=ExtResource("1_pmp6p")]
 script = ExtResource("2_nkmln")
 
 [node name="Camera3D" type="Camera3D" parent="."]
