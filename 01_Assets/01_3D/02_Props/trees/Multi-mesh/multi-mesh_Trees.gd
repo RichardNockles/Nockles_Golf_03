@@ -1,114 +1,81 @@
 extends MultiMeshInstance3D
 
-@export var tree_mesh : Mesh
-@export var bush_mesh : Mesh
-@export var num_trees = 500
-@export var num_bushes = 300
-@export var area_size = 100.0
-@export var landscape_mesh_path : NodePath = NodePath("Masters_course/Course_Mesh/LandscapeMeshInstance") # Updated path to LandscapeMeshInstance (assuming you added it)
-@export var allowed_tree_textures = ["High Ground"] # Allowed textures for trees - update in Inspector!
-@export var allowed_bush_textures = ["High Ground"] # Allowed textures for bushes - update in Inspector!
+@export var terrain: MeshInstance3D  # Assign `Masters_course_001` in the editor
+@export var max_trees: int = 300  # Number of trees to place
+@export var max_bushes: int = 200  # Number of bushes to place
+@export var allowed_tree_textures: Array = ["Surface_1", "Surface_2"]  # Corrected Material Names
+@export var allowed_bush_textures: Array = ["Surface_1", "Surface_2"]  # Corrected Material Names
+@export var tree_area: Vector3 = Vector3(100, 0, 100)  # Define placement boundaries
+@export var height_offset: float = 1.5  # Adjust this to raise trees slightly above the ground
 
-
-var landscape_mesh : MeshInstance3D # Variable to hold the landscape mesh node
+var rng = RandomNumberGenerator.new()
 
 func _ready():
-    randomize()
+    if not terrain or not terrain is MeshInstance3D:
+        print("❌ Error: Terrain not assigned or incorrect type!")
+        return
 
-    # Get the landscape mesh node using the NodePath from the Inspector
-    landscape_mesh = get_node(landscape_mesh_path)
-    if landscape_mesh == null:
-        printerr("Error: Landscape mesh not found at path: ", landscape_mesh_path)
-        return # Stop if landscape mesh is not found
+    print("✅ Terrain Assigned:", terrain.name)
+    print("✅ Allowed Tree Surfaces:", allowed_tree_textures)
+    print("✅ Allowed Bush Surfaces:", allowed_bush_textures)
 
-    multimesh.instance_count = num_trees + num_bushes
+    var physics_space = get_world_3d().direct_space_state
+    var new_multimesh = MultiMesh.new()
+    new_multimesh.transform_format = MultiMesh.TRANSFORM_3D
+    new_multimesh.instance_count = max_trees + max_bushes
+    multimesh = new_multimesh  # Assign the new MultiMesh
 
-    # Set up tree instances
-    for i in range(num_trees):
-        var x = randf_range(-area_size / 2.0, area_size / 2.0)
-        var z = randf_range(-area_size / 2.0, area_size / 2.0)
-        var y = 0.0 # Initial Y, will be adjusted by raycast
+    var placed_trees = 0
+    var placed_bushes = 0
 
-        var instance_pos = Vector3(x, y, z) # Renamed 'pos' to 'instance_pos'
+    for i in range((max_trees + max_bushes) * 2):  # More attempts for better coverage
+        var position = Vector3(
+            rng.randf_range(-tree_area.x, tree_area.x),
+            10,  # Start slightly above the ground for Raycast
+            rng.randf_range(-tree_area.z, tree_area.z)
+        )
 
-        if is_texture_allowed_at_position(instance_pos, allowed_tree_textures): # Use 'instance_pos'
-            # Texture is allowed, place the tree
-            var rotation_y = randf_range(0, TAU)
-            var rotation_quat = Quaternion(Vector3.UP, rotation_y)
-            var instance_scale = Vector3.ONE * randf_range(0.8, 1.2) # Renamed 'scale' to 'instance_scale'
+        # Perform Raycast downwards to detect ground
+        var query = PhysicsRayQueryParameters3D.create(position, position - Vector3(0, 20, 0))
+        var result = physics_space.intersect_ray(query)
 
-            var instance_transform = Transform3D() # Renamed 'transform' to 'instance_transform'
-            instance_transform.origin = instance_pos # Use 'instance_pos'
-            instance_transform.basis = Basis(rotation_quat)
-            instance_transform.scale = instance_scale # Use 'instance_scale'
+        if result:
+            var collider = result.collider
+            if collider == terrain:  # Ensure we hit the terrain
+                var material_name = get_material_name(result.shape)
 
-            multimesh.set_instance_transform(i, instance_transform) # Use 'instance_transform'
-            multimesh.set_instance_mesh(i, tree_mesh)
-        else:
-            # Texture not allowed, hide the instance
-            multimesh.set_instance_transform(i, Transform3D.IDENTITY)
-            multimesh.set_instance_mesh(i, null)
+                print("🌿 Raycast hit surface:", material_name, "at", result.position)  # Debugging
 
+                if material_name in allowed_tree_textures and placed_trees < max_trees:
+                    place_instance(placed_trees, result.position, "tree")
+                    placed_trees += 1
 
-    # Set up bush instances
-    for i in range(num_bushes):
-        var x = randf_range(-area_size / 2.0, area_size / 2.0)
-        var z = randf_range(-area_size / 2.0, area_size / 2.0)
-        var y = 0.0 # Initial Y, will be adjusted by raycast
+                elif material_name in allowed_bush_textures and placed_bushes < max_bushes:
+                    place_instance(max_trees + placed_bushes, result.position, "bush")
+                    placed_bushes += 1
 
-        var instance_pos = Vector3(x, y, z) # Renamed 'pos' to 'instance_pos'
+                if placed_trees >= max_trees and placed_bushes >= max_bushes:
+                    break  # Stop when reaching the limit
 
-        if is_texture_allowed_at_position(instance_pos, allowed_bush_textures): # Use 'instance_pos'
-            # Texture is allowed, place the bush
-            var rotation_y = randf_range(0, TAU)
-            var rotation_quat = Quaternion(Vector3.UP, rotation_y)
-            var instance_scale = Vector3.ONE * randf_range(0.5, 0.9) # Renamed 'scale' to 'instance_scale'
+    # Adjust final instance count to reflect the correct number of objects placed
+    multimesh.instance_count = placed_trees + placed_bushes
+    print("✅ Successfully placed", placed_trees, "trees and", placed_bushes, "bushes on the selected surfaces!")
 
-            var instance_transform = Transform3D() # Renamed 'transform' to 'instance_transform'
-            instance_transform.origin = instance_pos # Use 'instance_pos'
-            instance_transform.basis = Basis(rotation_quat)
-            instance_transform.scale = instance_scale # Use 'instance_scale'
+func get_material_name(material_index) -> String:
+    if material_index >= 0 and material_index < terrain.mesh.get_surface_count():
+        return terrain.mesh.surface_get_material(material_index).resource_name
+    return "Unknown"
 
-            multimesh.set_instance_transform(num_trees + i, instance_transform) # Use 'instance_transform'
-            multimesh.set_instance_mesh(num_trees + i, bush_mesh)
-        else:
-            # Texture not allowed, hide the instance
-            multimesh.set_instance_transform(num_trees + num_bushes + i, Transform3D.IDENTITY) # Hide instance
-            multimesh.set_instance_mesh(num_trees + num_bushes + i, null)
+func place_instance(index: int, position: Vector3, instance_type: String):
+    var transform = Transform3D()
+    transform.origin = position + Vector3(0, height_offset, 0)  # 🔹 Raise the object slightly above ground
 
+    # Add random rotation and scale for natural placement
+    transform = transform.rotated(Vector3.UP, rng.randf_range(0, 2 * PI))
 
-# **--- Texture Check Function ---**
-func is_texture_allowed_at_position(check_position, allowed_texture_names): # <--- Parameter is now 'check_position'
-    if landscape_mesh == null:
-        return false
+    if instance_type == "tree":
+        transform = transform.scaled(Vector3.ONE * rng.randf_range(1.0, 3.0))  # Scale trees
+    else:
+        transform = transform.scaled(Vector3.ONE * rng.randf_range(0.5, 1.5))  # Scale bushes
 
-    var space_state = get_world_3d().get_direct_space_state()
-    var query = PhysicsRayQueryParameters3D.new()
-    query.from = check_position + Vector3.UP * 100.0 # Use 'check_position'
-    query.to = check_position + Vector3.DOWN * 100.0 # Use 'check_position'
-    query.collide_mask = 1
-    query.collision_layer = 1
-    query.exclude = [self]
-
-    var result = space_state.intersect_ray(query)
-
-    if result and result.collider == landscape_mesh:
-        var mesh = landscape_mesh.mesh
-        var surface_index = 0 # Assuming single surface (index 0)
-        var material_index = mesh.surface_get_polygon_material(surface_index, result.face_index) # Get material index
-
-        var material = null
-
-        if mesh.material is Array: # Check if mesh.material is an Array
-            if material_index >= 0 and material_index < mesh.material.size():
-                material = mesh.material[material_index] # Get material from array
-        # else if mesh.material_override is Array: # Uncomment this block if materials are in material_override instead
-        #     if material_index >= 0 and material_index < mesh.material_override.size():
-        #         material = mesh.material_override[material_index]
-
-
-        if material:
-            var material_name = material.name
-            if material_name in allowed_texture_names:
-                return true
-    return false
+    multimesh.set_instance_transform(index, transform)

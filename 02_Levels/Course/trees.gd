@@ -2,8 +2,8 @@ extends MultiMeshInstance3D
 
 @export var terrain: Node3D  # Assign `Masters_course_001` in the editor
 @export var max_trees: int = 300  # Adjust tree density
-@export var allowed_surfaces: Array = [1, 2]  # Material indices for tree placement
-@export var tree_area: Vector3 = Vector3(100, 0, 100) # Area size for tree placement
+@export var allowed_surfaces: Dictionary = {1: 1.0, 2: 2.0}  # Surface 1 = Normal, Surface 2 = More Trees
+@export var tree_area: Vector3 = Vector3(100, 0, 100)  # Area size for tree placement
 
 var rng = RandomNumberGenerator.new()
 
@@ -13,7 +13,7 @@ func _ready():
         return
 
     print("✅ Terrain Assigned:", terrain.name)
-    print("✅ Allowed Surfaces:", allowed_surfaces)
+    print("✅ Allowed Surfaces:", allowed_surfaces.keys())
 
     var physics_space = get_world_3d().direct_space_state
     var new_multimesh = MultiMesh.new()
@@ -23,7 +23,7 @@ func _ready():
 
     var placed_trees = 0
 
-    for i in range(max_trees):
+    for i in range(max_trees * 2):  # More attempts to hit "High Ground.001"
         var position = Vector3(
             rng.randf_range(-tree_area.x, tree_area.x),
             10,  # Start slightly above the ground for Raycast
@@ -41,7 +41,13 @@ func _ready():
 
                 print("🌿 Raycast hit surface index:", material_index)  # Debugging
 
-                if material_index in allowed_surfaces:  # Place trees only on selected textures
+                if material_index in allowed_surfaces:
+                    var density_factor = allowed_surfaces[material_index]
+                    
+                    # Weighted placement: "High Ground.001" gets more trees
+                    if rng.randf() > 1.0 / density_factor:
+                        continue  # Skip placing trees on lower-priority surfaces sometimes
+
                     var transform = Transform3D()
                     transform.origin = result.position
 
@@ -51,6 +57,9 @@ func _ready():
 
                     multimesh.set_instance_transform(placed_trees, transform)
                     placed_trees += 1  # Only count successfully placed trees
+
+                    if placed_trees >= max_trees:
+                        break  # Stop when reaching the limit
 
     # Adjust final instance count to reflect the correct number of trees placed
     multimesh.instance_count = placed_trees
