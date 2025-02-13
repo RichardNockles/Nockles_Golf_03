@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjp6yunjpumxx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ghrf"]
+
+[node name="Bush1" type="MeshInstance3D"]
+material_override = SubResource("ShaderMaterial_5ghrf")
+mesh = null

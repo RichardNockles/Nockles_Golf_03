@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1jqbwo05l7tp"]
+
+[ext_resource type="PackedScene" uid="uid://bb5g31buxhshk" path="res://02_Levels/Course/Course.tscn" id="1_pmp6p"]
+[ext_resource type="Script" path="res://02_Levels/Main.gd" id="2_nkmln"]
+[ext_resource type="Script" path="res://02_Levels/Camera/camera_controller.gd" id="3_2ian3"]
+
+[sub_resource type="Environment" id="Environment_ny8su"]
+
+[node name="Main" type="Node3D"]
+
+[node name="GolfCourse" parent="." instance=ExtResource("1_pmp6p")]
+script = ExtResource("2_nkmln")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0083, 4.85235, 62.5438)
+environment = SubResource("Environment_ny8su")
+script = ExtResource("3_2ian3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+light_color = Color(0.975012, 0.729599, 0.409392, 1)
+light_energy = 5.0
+light_indirect_energy = 5.0
+light_volumetric_fog_energy = 5.0
+light_angular_distance = 50.0

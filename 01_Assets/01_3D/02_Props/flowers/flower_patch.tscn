@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c25lrlenma5yt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tyk6o"]
+
+[node name="FlowerPatch" type="MeshInstance3D"]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_tyk6o")
+cast_shadow = 0
+mesh = null

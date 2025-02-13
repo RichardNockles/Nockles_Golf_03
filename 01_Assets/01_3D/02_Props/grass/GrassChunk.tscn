@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cxgf7xg15hhxc"]
+
+[node name="grass_chunk_scene" type="MeshInstance3D"]
+material_override = null
+cast_shadow = 0
+mesh = null
