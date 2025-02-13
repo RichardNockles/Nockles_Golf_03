@@ -1,0 +1,29 @@
+[gd_scene load_steps=7 format=3 uid="uid://d2ha2aao2nkjf"]
+
+[ext_resource type="Script" path="res://04_Golf/01_Balls/GolfBall.gd" id="1_k4vd8"]
+[ext_resource type="Texture2D" uid="uid://dd4mfqj7n4u0u" path="res://04_Golf/01_Balls/Textures/golfball_texture.png" id="2_uh15m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c2rqp"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_pved0"]
+material = SubResource("StandardMaterial3D_c2rqp")
+radius = 0.08
+height = 0.16
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o2dqq"]
+albedo_texture = ExtResource("2_uh15m")
+uv1_scale = Vector3(6.01, 2.38, 0)
+uv1_offset = Vector3(0.13, -0.57, 0.55)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_77amm"]
+radius = 0.08
+
+[node name="GolfBall" type="RigidBody3D"]
+script = ExtResource("1_k4vd8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_pved0")
+surface_material_override/0 = SubResource("StandardMaterial3D_o2dqq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_77amm")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwtvxeem57pfy"]
+[gd_scene load_steps=7 format=3 uid="uid://bwtvxeem57pfy"]
 
 [ext_resource type="PackedScene" uid="uid://c0u7wmvto8ifo" path="res://01_Assets/01_3D/03_Environment/Course.glb" id="1_fllru"]
 [ext_resource type="ArrayMesh" uid="uid://bbtferxcltbfv" path="res://01_Assets/01_3D/02_Props/trees/tree_mesh.tres" id="2_xekfs"]
@@ -7,6 +7,8 @@
 
 [sub_resource type="MultiMesh" id="MultiMesh_hmote"]
 mesh = ExtResource("2_xekfs")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4rdaq"]
 
 [node name="Course" instance=ExtResource("1_fllru")]
 
@@ -25,3 +27,21 @@ mesh = ExtResource("2_xekfs")
 [node name="11th_tree2" type="MeshInstance3D" parent="Manual_Trees" index="1"]
 transform = Transform3D(1.91, 0, 0, 0, 4, 0, 0, 0, 1.91, 16.9479, 0.167596, 93.0109)
 mesh = ExtResource("2_xekfs")
+
+[node name="HoleTrigger_01" type="Area3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.289, 0.559937, 88.2061)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HoleTrigger_01" index="0"]
+shape = SubResource("CylinderShape3D_4rdaq")
+
+[node name="HoleTrigger_02" type="Area3D" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.5136, 2.26286, 142.292)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HoleTrigger_02" index="0"]
+shape = SubResource("CylinderShape3D_4rdaq")
+
+[node name="BallStartPos_01" type="Node3D" parent="." index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
+
+[node name="BallStartPos_02" type="Node3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4009, 2.42959, 52.6436)

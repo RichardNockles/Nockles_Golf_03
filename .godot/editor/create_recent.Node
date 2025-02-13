@@ -1,5 +1,10 @@
-MeshInstance3D
 Node3D
-MultiMeshInstance3D
 CollisionShape3D
+Area3D
+TextureProgressBar
+Control
+CanvasLayer
+MeshInstance3D
+RigidBody3D
+MultiMeshInstance3D
 StaticBody3D
