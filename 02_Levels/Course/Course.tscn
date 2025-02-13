@@ -1,5 +1,5 @@
-[gd_scene load_steps=2 format=3 uid="uid://bb5g31buxhshk"]
+[gd_scene load_steps=2 format=3 uid="uid://bwtvxeem57pfy"]
 
-[ext_resource type="PackedScene" uid="uid://ed5m0bm0qdob" path="res://01_Assets/01_3D/03_Environment/Course/Simple_Course.blend" id="1_v51yn"]
+[ext_resource type="PackedScene" uid="uid://c0u7wmvto8ifo" path="res://01_Assets/01_3D/03_Environment/Course.glb" id="1_fllru"]
 
-[node name="Course" instance=ExtResource("1_v51yn")]
+[node name="Course" instance=ExtResource("1_fllru")]

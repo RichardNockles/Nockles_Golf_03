@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c1jqbwo05l7tp"]
 
-[ext_resource type="PackedScene" uid="uid://bb5g31buxhshk" path="res://02_Levels/Course/Course.tscn" id="1_pmp6p"]
+[ext_resource type="PackedScene" uid="uid://bwtvxeem57pfy" path="res://02_Levels/Course/Course.tscn" id="1_pmp6p"]
 [ext_resource type="Script" path="res://02_Levels/Main.gd" id="2_nkmln"]
 [ext_resource type="Script" path="res://02_Levels/Camera/camera_controller.gd" id="3_2ian3"]
 
