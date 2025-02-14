@@ -1,34 +1,27 @@
 extends Node3D
 
-@export var golf_ball: RigidBody3D  # Assign GolfBall.tscn in Inspector
-@export var ball_start_positions: Array[Node3D]  # Assign BallStartPos_X nodes
-@export var course: Node3D  # Assign Course.tscn
+@export var ball_scene: PackedScene  # GolfBall.tscn
+@export var hole_start_positions: Array[Node3D]  # Assign BallStartPos_X nodes
 
-var current_hole = 0  # Track the hole number
+var current_hole: int = 0
+var current_ball
 
 func _ready():
-    print("🎮 Main Scene Loaded")
-    if golf_ball and ball_start_positions.size() > 0:
-        move_ball_to_start(0)  # Start at hole 1
+    spawn_ball()
 
-    # Connect hole triggers to function
-    var hole_triggers = course.get_tree().get_nodes_in_group("holes")
-    for hole in hole_triggers:
-        hole.connect("body_entered", Callable(self, "_on_HoleTrigger_body_entered"))
+func spawn_ball():
+    if current_ball:
+        current_ball.queue_free()  # Remove old ball
 
-func _on_HoleTrigger_body_entered(body):
-    if body == golf_ball:
-        print("⛳ Ball entered hole", current_hole + 1, "- Moving to next hole")
-        move_to_next_hole()
+    # Spawn new golf ball
+    current_ball = ball_scene.instantiate()
+    add_child(current_ball)
+    current_ball.global_position = hole_start_positions[current_hole].global_position
+    current_ball.hole_completed.connect(_on_hole_completed)  # Connect the signal
 
-func move_to_next_hole():
-    move_ball_to_start(current_hole + 1)
-
-func move_ball_to_start(hole_index):
-    if hole_index < ball_start_positions.size():
-        current_hole = hole_index
-        golf_ball.global_transform.origin = ball_start_positions[hole_index].global_transform.origin
-        golf_ball.freeze = true  # Stop the ball until the next shot
-        print("🎯 Ball moved to start position for hole", hole_index + 1)
+func _on_hole_completed():
+    current_hole += 1
+    if current_hole < hole_start_positions.size():
+        spawn_ball()  # Spawn at next hole
     else:
-        print("🎉 Game Over - All holes completed!")
+        print("🎉 Game Over! All holes completed.")

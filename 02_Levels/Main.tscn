@@ -1,28 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://c1jqbwo05l7tp"]
+[gd_scene load_steps=6 format=3 uid="uid://c1jqbwo05l7tp"]
 
 [ext_resource type="PackedScene" uid="uid://bwtvxeem57pfy" path="res://02_Levels/Course/Course.tscn" id="1_pmp6p"]
 [ext_resource type="Script" path="res://02_Levels/Main.gd" id="2_nkmln"]
-[ext_resource type="Script" path="res://02_Levels/Camera/camera_controller.gd" id="3_2ian3"]
 [ext_resource type="Script" path="res://03_Player/03_UI/PowerBar.gd" id="4_ys6ka"]
 [ext_resource type="Texture2D" uid="uid://c28pqnbn7h3pm" path="res://03_Player/03_UI/ProgressBars/SimpleBar.png" id="5_mf0bh"]
 [ext_resource type="PackedScene" uid="uid://d2ha2aao2nkjf" path="res://04_Golf/01_Balls/GolfBall.tscn" id="6_k7tbe"]
-
-[sub_resource type="Environment" id="Environment_ny8su"]
-background_mode = 1
-background_color = Color(0.403318, 0.721208, 0.863612, 1)
-background_energy_multiplier = 1.17
-ambient_light_color = Color(0.787759, 0.787759, 0.787759, 1)
-ambient_light_energy = 2.39
 
 [node name="Main" type="Node3D"]
 
 [node name="Course" parent="." instance=ExtResource("1_pmp6p")]
 script = ExtResource("2_nkmln")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.988814, 0, 0.149156, 0, 1, 0, -0.149156, 0, -0.988814, 211.481, -0.354753, -188.85)
-environment = SubResource("Environment_ny8su")
-script = ExtResource("3_2ian3")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 light_color = Color(0.975012, 0.729599, 0.409392, 1)
