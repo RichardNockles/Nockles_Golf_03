@@ -11,7 +11,10 @@ background_mode = 2
 background_energy_multiplier = 1.5
 ambient_light_energy = 1.5
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("hole_start_positions")]
+script = ExtResource("2_nkmln")
+ball_scene = ExtResource("6_k7tbe")
+hole_start_positions = [NodePath("Hole1Start"), NodePath("Hole2Start")]
 
 [node name="Course" parent="." node_paths=PackedStringArray("hole_start_positions") instance=ExtResource("1_pmp6p")]
 script = ExtResource("2_nkmln")
@@ -48,3 +51,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7rcvy")
+
+[node name="Hole1Start" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
+
+[node name="Hole2Start" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 52)
+
+[connection signal="hole_completed" from="GolfBall" to="." method="_on_golf_ball_hole_completed"]

@@ -62,6 +62,6 @@ shape = SubResource("CylinderShape3D_4rdaq")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
 
 [node name="BallStartPos_02" type="Node3D" parent="." index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4009, 2.42959, 52.6436)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 52)
 
 [connection signal="body_entered" from="HoleTrigger_01" to="." method="_on_hole_trigger_01_body_entered"]
