@@ -29,6 +29,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_o2dqq")
 shape = SubResource("SphereShape3D_77amm")
 
 [node name="BallCamera" type="Camera3D" parent="."]
-transform = Transform3D(-1, 1.51808e-08, -8.60946e-08, 0, 0.984808, 0.173648, 8.74228e-08, 0.173648, -0.984808, 0, 2, -4)
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1, 2)
 current = true
-script = ExtResource("1_k4vd8")

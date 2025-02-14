@@ -46,9 +46,6 @@ offset_right = 700.0
 offset_bottom = 54.0
 texture_progress = ExtResource("5_mf0bh")
 
-[node name="GolfBall" parent="." instance=ExtResource("6_k7tbe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7rcvy")
 
@@ -57,5 +54,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
 
 [node name="Hole2Start" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 52)
-
-[connection signal="hole_completed" from="GolfBall" to="." method="_on_golf_ball_hole_completed"]
