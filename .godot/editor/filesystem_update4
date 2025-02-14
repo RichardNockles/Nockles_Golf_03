@@ -9,3 +9,4 @@ res://04_Golf/01_Balls/GolfBall.tscn
 res://04_Golf/01_Balls/GolfBall.gd
 res://03_Player/03_UI/PowerBar.gd
 res://02_Levels/Main.gd
+res://02_Levels/Course/Course.gd
