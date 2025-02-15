@@ -1,35 +1,33 @@
-[gd_scene load_steps=7 format=3 uid="uid://c1jqbwo05l7tp"]
+[gd_scene load_steps=8 format=3 uid="uid://c1jqbwo05l7tp"]
 
 [ext_resource type="PackedScene" uid="uid://bwtvxeem57pfy" path="res://02_Levels/Course/Course.tscn" id="1_pmp6p"]
 [ext_resource type="Script" path="res://02_Levels/Main.gd" id="2_nkmln"]
 [ext_resource type="Script" path="res://03_Player/03_UI/PowerBar.gd" id="4_ys6ka"]
 [ext_resource type="Texture2D" uid="uid://c28pqnbn7h3pm" path="res://03_Player/03_UI/ProgressBars/SimpleBar.png" id="5_mf0bh"]
-[ext_resource type="PackedScene" uid="uid://d2ha2aao2nkjf" path="res://04_Golf/01_Balls/GolfBall.tscn" id="6_k7tbe"]
 
-[sub_resource type="Environment" id="Environment_7rcvy"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ccn2t"]
+
+[sub_resource type="Sky" id="Sky_csvo0"]
+sky_material = SubResource("ProceduralSkyMaterial_ccn2t")
+
+[sub_resource type="Environment" id="Environment_3tjjr"]
 background_mode = 2
-background_energy_multiplier = 1.5
-ambient_light_energy = 1.5
+sky = SubResource("Sky_csvo0")
+tonemap_mode = 2
 
-[node name="Main" type="Node3D" node_paths=PackedStringArray("hole_start_positions")]
+[node name="Main" type="Node3D"]
 script = ExtResource("2_nkmln")
-ball_scene = ExtResource("6_k7tbe")
-hole_start_positions = [NodePath("Hole1Start"), NodePath("Hole2Start")]
 
 [node name="Course" parent="." node_paths=PackedStringArray("hole_start_positions") instance=ExtResource("1_pmp6p")]
 script = ExtResource("2_nkmln")
 ball_scene = null
 hole_start_positions = []
 
-[node name="SunLight" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.5, 0.612372, 0.612372, 0, 0.707107, -0.707107, -0.866025, 0.353553, 0.353553, 0, 0, 0)
-light_color = Color(0.975012, 0.729599, 0.409392, 1)
-light_energy = 2.0
-light_indirect_energy = 5.0
-light_volumetric_fog_energy = 5.0
-light_angular_distance = 50.0
-shadow_enabled = true
-shadow_opacity = 0.5
+[node name="Hole1Start" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
+
+[node name="Hole2Start" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 52)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -47,10 +45,4 @@ offset_bottom = 54.0
 texture_progress = ExtResource("5_mf0bh")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_7rcvy")
-
-[node name="Hole1Start" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
-
-[node name="Hole2Start" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 52)
+environment = SubResource("Environment_3tjjr")

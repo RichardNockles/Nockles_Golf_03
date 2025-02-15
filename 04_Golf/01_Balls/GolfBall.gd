@@ -3,11 +3,10 @@ extends RigidBody3D
 @export var power_multiplier: float = 20.0
 @export var mouse_sensitivity: float = 0.2
 @export var camera_distance: float = 4.0
-@export var camera_height: float = 1.0
-@export var charge_speed: float = 0.5
-@export var max_trail_points : int = 50
+@export var camera_height: float = 1.5
+@export var charge_speed: float = 0.3
+@export var stop_threshold: float = 0.1
 
-@onready var trail = $Line3D
 @onready var ball_camera = $BallCamera
 
 var is_aiming: bool = true
@@ -19,7 +18,6 @@ signal hole_completed
 func _ready():
     print("🏌️ Golf Ball Ready!")
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-    trail.clear_points()
     freeze = false
 
 func _unhandled_input(event):
@@ -28,31 +26,26 @@ func _unhandled_input(event):
             rotate_y(deg_to_rad(-event.relative.x * mouse_sensitivity))
 
         if event.is_action_pressed("swing"):
-            shot_power = 0.1  # Initialize power
+            shot_power = 0.1
         if event.is_action_released("swing"):
             _hit_ball()
 
 func _process(delta):
     if is_aiming and Input.is_action_pressed("swing"):
-        shot_power = min(1.0, shot_power + delta * charge_speed) #charge slower
+        shot_power = min(1.0, shot_power + delta * charge_speed)
 
 func _physics_process(_delta):
     if is_moving:
-        if linear_velocity.length() < 0.1:
+        if linear_velocity.length() < stop_threshold:
             linear_velocity = Vector3.ZERO
             angular_velocity = Vector3.ZERO
             is_moving = false
             is_aiming = true
             Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-            trail.clear_points()
 
-        # Camera follow with adjustable offset
+        # Camera follow
         ball_camera.global_transform.origin = global_transform.origin + Vector3(0, camera_height, -camera_distance)
         ball_camera.look_at(global_transform.origin, Vector3.UP)
-
-        trail.add_point(global_position)
-        if trail.get_point_count() > max_trail_points:
-            trail.remove_point(0)
 
 func _hit_ball():
     if is_aiming:

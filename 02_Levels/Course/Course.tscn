@@ -1,10 +1,30 @@
 [gd_scene load_steps=8 format=3 uid="uid://bwtvxeem57pfy"]
 
 [ext_resource type="PackedScene" uid="uid://c0u7wmvto8ifo" path="res://01_Assets/01_3D/03_Environment/Course.glb" id="1_fllru"]
-[ext_resource type="Script" path="res://02_Levels/Course/Course.gd" id="2_2rckd"]
 [ext_resource type="ArrayMesh" uid="uid://bbtferxcltbfv" path="res://01_Assets/01_3D/02_Props/trees/tree_mesh.tres" id="2_xekfs"]
 [ext_resource type="Script" path="res://02_Levels/Course/trees.gd" id="3_6kf30"]
 [ext_resource type="Script" path="res://01_Assets/01_3D/02_Props/trees/snap_tree.gd" id="4_bpbrp"]
+
+[sub_resource type="GDScript" id="GDScript_bsdyx"]
+script/source = "extends Node3D
+
+# ✅ Signal to notify Main.gd when the ball enters a hole
+signal ball_entered_hole  
+
+func _ready():
+    print(\"⛳ Course Loaded!\")
+
+    # ✅ Connect signals for all hole triggers
+    var hole_triggers = get_tree().get_nodes_in_group(\"holes\")
+    for hole_trigger in hole_triggers:
+        if hole_trigger.has_signal(\"body_entered\"):
+            hole_trigger.connect(\"body_entered\", Callable(self, \"_on_HoleTrigger_body_entered\"))
+
+func _on_HoleTrigger_body_entered(body):
+    if body.name == \"GolfBall\":
+        print(\"🏆 Ball entered a hole!\")
+        ball_entered_hole.emit()  # ✅ Emit signal to notify Main.gd
+"
 
 [sub_resource type="MultiMesh" id="MultiMesh_hmote"]
 mesh = ExtResource("2_xekfs")
@@ -12,7 +32,7 @@ mesh = ExtResource("2_xekfs")
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_4rdaq"]
 
 [node name="Course" instance=ExtResource("1_fllru")]
-script = ExtResource("2_2rckd")
+script = SubResource("GDScript_bsdyx")
 
 [node name="Trees" type="MultiMeshInstance3D" parent="." index="1" node_paths=PackedStringArray("terrain")]
 multimesh = SubResource("MultiMesh_hmote")
@@ -57,11 +77,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.5136, 2.26286, 142.292)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HoleTrigger_02" index="0"]
 shape = SubResource("CylinderShape3D_4rdaq")
-
-[node name="BallStartPos_01" type="Node3D" parent="." index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)
-
-[node name="BallStartPos_02" type="Node3D" parent="." index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 52)
 
 [connection signal="body_entered" from="HoleTrigger_01" to="." method="_on_hole_trigger_01_body_entered"]
