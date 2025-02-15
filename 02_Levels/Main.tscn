@@ -3,8 +3,20 @@
 [ext_resource type="PackedScene" uid="uid://bwtvxeem57pfy" path="res://02_Levels/Course/Course.tscn" id="1_pmp6p"]
 [ext_resource type="Script" path="res://02_Levels/Main.gd" id="2_nkmln"]
 [ext_resource type="PackedScene" uid="uid://d2ha2aao2nkjf" path="res://04_Golf/01_Balls/GolfBall.tscn" id="2_ufksv"]
-[ext_resource type="Script" path="res://03_Player/03_UI/PowerBar.gd" id="4_ys6ka"]
 [ext_resource type="Texture2D" uid="uid://c28pqnbn7h3pm" path="res://03_Player/03_UI/ProgressBars/SimpleBar.png" id="5_mf0bh"]
+
+[sub_resource type="GDScript" id="GDScript_qmkn2"]
+script/source = "extends Control
+
+@onready var progress_bar = $TextureProgressBar
+@export var golf_ball: RigidBody3D  # Assign GolfBall in Inspector
+
+func _process(delta):
+    if golf_ball and golf_ball.aiming:
+        progress_bar.value = golf_ball.power
+    else:
+        progress_bar.value = 0  # Reset when not aiming
+"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ccn2t"]
 
@@ -36,7 +48,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("4_ys6ka")
+script = SubResource("GDScript_qmkn2")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="UI/PowerBar"]
 layout_mode = 0

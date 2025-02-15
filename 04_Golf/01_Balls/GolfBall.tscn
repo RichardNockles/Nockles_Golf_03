@@ -22,6 +22,8 @@ uv1_offset = Vector3(0.13, -0.57, 0.55)
 mass = 0.045
 freeze_mode = 1
 script = ExtResource("1_k4vd8")
+power_multiplier = 500.0
+charge_speed = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_77amm")
