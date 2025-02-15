@@ -19,6 +19,8 @@ uv1_scale = Vector3(6.01, 2.38, 0)
 uv1_offset = Vector3(0.13, -0.57, 0.55)
 
 [node name="GolfBall" type="RigidBody3D"]
+mass = 0.045
+freeze_mode = 1
 script = ExtResource("1_k4vd8")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

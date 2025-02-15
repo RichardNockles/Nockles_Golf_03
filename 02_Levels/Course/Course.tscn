@@ -1,28 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwtvxeem57pfy"]
+[gd_scene load_steps=5 format=3 uid="uid://bwtvxeem57pfy"]
 
 [ext_resource type="PackedScene" uid="uid://c0u7wmvto8ifo" path="res://01_Assets/01_3D/03_Environment/Course.glb" id="1_fllru"]
 [ext_resource type="ArrayMesh" uid="uid://bbtferxcltbfv" path="res://01_Assets/01_3D/02_Props/trees/tree_mesh.tres" id="2_xekfs"]
-
-[sub_resource type="GDScript" id="GDScript_bsdyx"]
-script/source = "extends Node3D
-
-# ✅ Signal to notify Main.gd when the ball enters a hole
-signal ball_entered_hole  
-
-func _ready():
-    print(\"⛳ Course Loaded!\")
-
-    # ✅ Connect signals for all hole triggers
-    var hole_triggers = get_tree().get_nodes_in_group(\"holes\")
-    for hole_trigger in hole_triggers:
-        if hole_trigger.has_signal(\"body_entered\"):
-            hole_trigger.connect(\"body_entered\", Callable(self, \"_on_HoleTrigger_body_entered\"))
-
-func _on_HoleTrigger_body_entered(body):
-    if body.name == \"GolfBall\":
-        print(\"🏆 Ball entered a hole!\")
-        ball_entered_hole.emit()  # ✅ Emit signal to notify Main.gd
-"
 
 [sub_resource type="GDScript" id="GDScript_1eyi8"]
 script/source = "extends Node3D
@@ -59,7 +38,6 @@ func _ready():
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_4rdaq"]
 
 [node name="Course" instance=ExtResource("1_fllru")]
-script = SubResource("GDScript_bsdyx")
 
 [node name="Manual_Trees" type="Node3D" parent="." index="1"]
 script = SubResource("GDScript_1eyi8")

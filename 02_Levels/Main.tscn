@@ -21,10 +21,7 @@ script = ExtResource("2_nkmln")
 ball_scene = ExtResource("2_ufksv")
 hole_start_positions = [NodePath("Hole1Start"), NodePath("Hole2Start")]
 
-[node name="Course" parent="." node_paths=PackedStringArray("hole_start_positions") instance=ExtResource("1_pmp6p")]
-script = ExtResource("2_nkmln")
-ball_scene = null
-hole_start_positions = []
+[node name="Course" parent="." instance=ExtResource("1_pmp6p")]
 
 [node name="Hole1Start" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211, -1.8, -184)

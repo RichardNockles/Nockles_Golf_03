@@ -4,26 +4,32 @@ extends Node3D
 @export var hole_start_positions: Array[Node3D]
 
 var current_hole: int = 0
-var current_ball
+var current_ball: RigidBody3D
 
 func _ready():
-    print("Main _ready() called") # Debugging print
+    print("=== Main.gd _ready() START ===")
     if hole_start_positions.is_empty():
-        print("❌ Error: No hole start positions assigned!")
-        return
+        print("❌ ERROR: No hole start positions assigned!")
+        return  # Stop if no start positions
 
-    print("hole_start_positions size:", hole_start_positions.size())
+    print("Hole Start Positions Count:", hole_start_positions.size())
+    for i in range(hole_start_positions.size()):
+        print("  Hole ", i, ": ", hole_start_positions[i]) #verify the hole positions.
+
+    print("ball_scene:", ball_scene)  # Check if ball_scene is null
     spawn_ball()
+    print("=== Main.gd _ready() END ===")
+
 
 func spawn_ball():
-    print("spawn_ball() called") # Debugging print
-    print("ball_scene:", ball_scene)
-    if current_ball:
-        current_ball.queue_free()
+    print("--- spawn_ball() called ---")
 
     if ball_scene == null:
-      print("ERROR: Ball Scene is Null")
-      return # exit to prevent crashes
+        print("❌❌❌ ERROR: ball_scene is null!  Cannot instantiate.")
+        return # exit to prevent crashes
+
+    if current_ball:
+        current_ball.queue_free()
 
     current_ball = ball_scene.instantiate()
     add_child(current_ball)
